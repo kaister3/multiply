@@ -1,6 +1,7 @@
+
 #include <iostream>
-#include <cmath.h>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -15,6 +16,14 @@ string addPreZero(string x, int zeroNum);
 string reverseString(string s);
 int Max(int x, int y);
 
+int main()
+{
+    string s1("3141592653589793238462643383279502884197169399375105820974944592");
+    string s2("2718281828459045235360287471352662497757247093699959574966967627");
+    cout << multiply(s1, s2) << endl;
+    return 0;
+}
+
 int Max(int x, int y)
 {
     //return the bigger one
@@ -26,13 +35,13 @@ int string2int(string x)
     //change string to int
     int n = x.length();
     int s = 0;
-    for(int i = 0, i < n, i++)
+    for(int i = 0; i < n; i++)
     {
         s = 10 * s + x[i] - '0';//format transfer
     }
     return s;
 }
-mZstring int2string(int x)
+string int2string(int x)
 {
     //change int to string
     string str;
@@ -57,7 +66,7 @@ string simplyMultiply(string x, string y)
 string reverseString(string s)//??
 {
     string result;
-    for(auto temp = s.end() - 1; temp >= s.begin; --temp/*-1 before pushing*/)
+    for(auto temp = s.end() - 1; temp >= s.begin(); --temp/*-1 before pushing*/)
     {
         result.push_back(*temp);//push to reversed string
     }
@@ -97,7 +106,7 @@ string add(string x, string y)
     }
     if (i != y.size())//y is longer
     {
-        for (; i < y.size; ++i)//
+        for (; i < y.size(); ++i)//
         {
             tempSum = y[i] - '0' + carry;
             s[i] = tempSum % 10 + '0';
@@ -105,7 +114,7 @@ string add(string x, string y)
         }
     }else if (i != x.size())//y is longer
     {
-        for (; i < x.size; ++i)
+        for (; i < x.size(); ++i)
         {
             tempSum = x[i] - '0' + carry;
             s[i] = tempSum % 10 + '0';
@@ -130,7 +139,7 @@ string Minus(string x, string y)//return x minux y
     x = reverseString(x);
     y = reverseString(y);
     string s(x.size(), '0');
-    for (i = 0; i < y.size; ++i)
+    for (i = 0; i < y.size(); ++i)
     {
         if (x[i] < y[i])
         {
@@ -161,12 +170,12 @@ string multiply(string x, string y)
 {
     int xSize = x.length();
     int ySize = y.length();
-    int n = maxSize(xSize, ySize);
+    int n = Max(xSize, ySize);
     if (n == xSize)
     {   
         y = addPreZero(y, n - ySize);
     }
-    if (n == ysize)
+    if (n == ySize)
     {
         x = addPreZero(x, n - xSize);
     }
