@@ -1,7 +1,7 @@
-
 #include <iostream>
-#include <sstream>
 #include <string>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -16,149 +16,153 @@ string addPreZero(string x, int zeroNum);
 string reverseString(string s);
 int Max(int x, int y);
 
-int main()
-{
-    string s1("3141592653589793238462643383279502884197169399375105820974944592");
-    string s2("2718281828459045235360287471352662497757247093699959574966967627");
-    cout << multiply(s1, s2) << endl;
-    return 0;
-}
-
-int Max(int x, int y)
-{
-    //return the bigger one
+int Max(int x, int y){
+    /*
+     * Description: find max number
+     * Input: Two integers
+     * Output: Return max between x and y
+     */
     return x > y ? x : y;
 }
 
-int string2int(string x)
-{
-    //change string to int
+int string2int(string x){
+    /*
+     * Description: Change string to int
+     * Input: A string
+     * Output: Return a integer represents origin string
+     */
     int n = x.length();
     int s = 0;
-    for(int i = 0; i < n; i++)
-    {
-        s = 10 * s + x[i] - '0';//format transfer
+    for(int i = 0; i < n; ++i){
+        s = 10 * s + x[i] - '0';
     }
     return s;
 }
-string int2string(int x)
-{
-    //change int to string
-    string str;
+
+string int2string(int x){
+    /*
+     * Description: Change int to string
+     * Input: An integers
+     * Output: Return a string represents origin integers
+     */
+    string result;
     stringstream stream;
     stream << x;
-    stream >> str;
-    return str;
+    stream >> result;
+    return result;
 }
 
-string simplyMultiply(string x, string y)
-{
-    //1x1
-    if(x.empty() | y.empty())
-    {
-        return int2string(0);//if x = 0 or y = 0,return 0
+string simplyMultiply(string x, string y){
+    /*
+     * Description: multiply two string, whose length = 1
+     * Input: Two string
+     * Output: Return product
+     */
+    if(x.empty() | y.empty()){
+        return int2string(0);
     }else{
-        int result = string2int(x) * string2int(y);//or return x*y
+        int result = string2int(x) * string2int(y);
         return int2string(result);
     }
 }
 
-string reverseString(string s)//??
-{
+string reverseString(string s){
+    /*
+     * Description: Reverse the string
+     * Input: A string
+     * Output: Return a reversed string
+     */
     string result;
-    for(auto temp = s.end() - 1; temp >= s.begin(); --temp/*-1 before pushing*/)
-    {
-        result.push_back(*temp);//push to reversed string
+    for(auto temp = s.end() - 1; temp >= s.begin(); --temp){
+        result.push_back(*temp);
     }
     return result;
 }
 
-string addZero(string x, int zeroNum)
-{
-    //*10^zeronum
-    string temp(zeroNum, '0');//0000000...
+string addZero(string x, int zeroNum){
+    /*
+     * Description: Add zero between a string, simulate x * 10^n
+     * Input: A string, a integer represents zero's number after it
+     * Output: Return a string, which is added n's 0
+     */
+    string temp(zeroNum, '0');
     x.append(temp);
     return x;
 }
 
-string addPreZero(string x, int zeroNum)
-/*in order to make two string's length equal
-or the function won't work*/
-{
-    string temp(zeroNum, '0');//000000.....
+string addPreZero(string x, int zeroNum){
+    /*
+     * Description: Add zero before a string to fill in empty place
+     * Input: A string, a integer represents zero's number
+     * Output: Return a string, which is added n's 0 before it
+     */
+    string temp(zeroNum, '0');
     temp.append(x);
     return temp;
 }
 
-string add(string x, string y)
-{
-    //return the sum of two strings
-    int i, carry, tempSum = 0;//carry=jinwei
+string add(string x, string y){
+    /*
+     * Description: Add two string
+     * Input: Two strings
+     * Output: Return their sum
+     */
+    int i, more = 0, tempSum = 0;
     x = reverseString(x);
     y = reverseString(y);
     int maxSize = Max(x.size(), y.size());
-    string s(maxSize+1, '0');
-    for (i = 0; i < x.size() && i < y.size(); ++i)
-    {
-        tempSum = x[i] - '0' + y[i] - '0' + carry;
-        s[i] = tempSum % 10 + '0';//gewei
-        carry = tempSum / 10;//jinwei
+    string s(maxSize + 1, '0');
+    for(i = 0; i < x.size() && i < y.size(); ++i){
+        tempSum = x[i] - '0' + y[i] - '0' + more;
+        s[i] = tempSum % 10 + '0';
+        more = tempSum / 10;
     }
-    if (i != y.size())//y is longer
-    {
-        for (; i < y.size(); ++i)//
-        {
-            tempSum = y[i] - '0' + carry;
+    if(i != y.size()){
+        for(; i < y.size(); ++i){
+            tempSum = y[i] - '0' + more;
             s[i] = tempSum % 10 + '0';
-            carry = tempSum / 10;
+            more = tempSum / 10;
         }
-    }else if (i != x.size())//y is longer
-    {
-        for (; i < x.size(); ++i)
-        {
-            tempSum = x[i] - '0' + carry;
+    }else if(i != x.size()){
+        for(; i < x.size(); ++i){
+            tempSum = x[i] - '0' + more;
             s[i] = tempSum % 10 + '0';
-            carry = tempSum / 10;
+            more = tempSum / 10;
         }
     }
-
-    if (carry != 0)
-    {       
-        s[i] +=  carry;//i = maxSize
-    }else
-    {
-        s.pop_back();//delete the last element(reverse -> the first)
+    if(more != 0){
+        s[i] += more;
+    }else{
+        s.pop_back();
     }
-    s = reverseString(s);//reverse back
+    s = reverseString(s);
     return s;
 }
 
-string Minus(string x, string y)//return x minux y
-{
+string Minus(string x, string y){
+    /*
+     * Description: Minus between strings
+     * Input: Two strings
+     * Output: Return their difference
+     */
     int i;
     x = reverseString(x);
     y = reverseString(y);
     string s(x.size(), '0');
-    for (i = 0; i < y.size(); ++i)
-    {
-        if (x[i] < y[i])
-        {
+    for(i = 0; i < y.size(); ++i){
+        if(x[i] < y[i]){
             x[i] += 10;
-            x[i+1] -= 1;
+            x[i + 1] -= 1;
         }
         s[i] = x[i] - y[i] + '0';
     }
-    for (; i < x.size() - 1; ++i)
-    {
+    for(; i < x.size(); ++i){
         s[i] = x[i];
     }
-    for (i = x.size() - 1; i > 0; --i)//if x[first] = 0,pop()
-    {
-        if (x[i] == 0)
-        {
-            x.pop_back();
-        }else
-        {
+    for(i = x.size() - 1; i > 0; --i){
+        if(s[i] == '0'){
+            s.pop_back();
+        }else{
             break;
         }
     }
@@ -166,33 +170,57 @@ string Minus(string x, string y)//return x minux y
     return s;
 }
 
-string multiply(string x, string y)
-{
+string multiply(string x, string y){
+    /*Description: Multiply between two strings
+     *Input: Two strings, represents two positive integers
+     *Output: Return product of x and y
+    */
+
     int xSize = x.length();
     int ySize = y.length();
     int n = Max(xSize, ySize);
-    if (n == xSize)
-    {   
+    if(n == xSize){
         y = addPreZero(y, n - ySize);
-    }
-    if (n == ySize)
-    {
+    }else{
         x = addPreZero(x, n - xSize);
     }
-    if(n == 1)
-    {
+    if(n == 1){
         return simplyMultiply(x, y);
     }
-    string xLeft = x.substr(0, n/2);
-    string xRight = x.substr(n/2);
-    string yLeft = y.substr(0, n/2);
-    string yRight = y.substr(n/2);
 
-    string p1 = multiply(xLeft, yLeft);//a*c
-    string p2 = multiply(xRight, yRight);//b*d
-    string p3 = multiply(add(xLeft, xRight), add(yLeft, yRight));//(a+b)*(c+d)=ac+bc+ad+bd
-    string p4 = Minus(Minus(p3, p1), p2);//bc+ad
+    string xLeft = x.substr(0, n / 2);
+    string xRight = x.substr(n / 2);
+    string yLeft = y.substr(0, n / 2);
+    string yRight = y.substr(n / 2);
 
-    string result = add(add(addZero(p1, 2 * (n - n/2)), addZero(p4, (n - n/2))), p2);
+    string p1 = multiply(xLeft, yLeft);
+    string p2 = multiply(xRight, yRight);
+    string p3 = multiply(add(xLeft, xRight), add(yLeft, yRight));
+    string p4 = Minus(Minus(p3, p1), p2);
+
+    string result = add(add(addZero(p1, 2 * (n - n / 2)),
+                            addZero(p4, n - n / 2)), p2);
     return result;
+}
+
+
+
+int main()
+{
+    ifstream fin("test.txt");
+    string s1;
+    string s2;
+    if (fin)
+    {
+        getline(fin, s1);
+        getline(fin, s2);
+    }
+    else{
+        cout << "read failed!" << endl;
+        return 0;
+    }
+    //string s1("3141592653589793238462643383279502884197169399375105820974944592");
+    //string s2("2718281828459045235360287471352662497757247093699959574966967627");
+    cout << multiply(s1, s2) << endl;
+    return 0;
 }
